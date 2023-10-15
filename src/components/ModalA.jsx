@@ -11,6 +11,7 @@ const ModalA = () => {
   const [show, setShow] = useState(false);
   const [contacts, setContacts] = useState([]);
   const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -32,12 +33,13 @@ const ModalA = () => {
 
         const data = await res.json();
 
-        console.log(data);
         if (check) {
           setContacts([...data?.results?.filter((item) => item?.id % 2 === 0)]);
+          setCount(data?.count);
         } else {
           // setContacts((prevContacts) => [...prevContacts, ...data.results]);
-          setContacts([...data.results]);
+          setContacts([...data?.results]);
+          setCount(data?.count);
         }
       } catch (error) {
         // Handle any fetch errors
@@ -129,13 +131,11 @@ const ModalA = () => {
             // <InfiniteScroll
             //   dataLength={contacts.length}
             //   next={fetchMoreData}
-            //   hasMore={contacts.length < data?.count}
+            //   hasMore={contacts.length < count}
             //   loader={<div>Loading...</div>}
             //   endMessage={<div>No more data to load.</div>}
             // >
-            //   <div className="table-container">
             <Table data={contacts} setView={setView} setShow={setShow} />
-            //   </div>
             // </InfiniteScroll>
           )}
         </div>
